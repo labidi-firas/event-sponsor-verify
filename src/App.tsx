@@ -16,13 +16,15 @@ import Sponsorships from "./pages/laboratory/Sponsorships";
 import Declare from "./pages/laboratory/Declare";
 import Import from "./pages/laboratory/Import";
 
-// Organizer Pages
-import OrganizerDashboard from "./pages/organizer/OrganizerDashboard";
-import Participants from "./pages/organizer/Participants";
-import Conflicts from "./pages/organizer/Conflicts";
+// Participant Pages
+import ParticipantEvents from "./pages/participant/Events";
+import ParticipantRegistrations from "./pages/participant/Registrations";
 
 // Admin Pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminEvents from "./pages/admin/Events";
+import AdminParticipants from "./pages/admin/Participants";
+import AdminConflicts from "./pages/admin/Conflicts";
 import Users from "./pages/admin/Users";
 import AIConfig from "./pages/admin/AIConfig";
 
@@ -39,7 +41,7 @@ function ProtectedRoute({ children, allowedRoles }: { children: React.ReactNode;
     // Redirect to appropriate dashboard based on role
     const roleRoutes: Record<string, string> = {
       laboratory: '/dashboard',
-      organizer: '/organizer/dashboard',
+      participant: '/participant/events',
       admin: '/admin/dashboard',
     };
     return <Navigate to={roleRoutes[user.role] || '/dashboard'} replace />;
@@ -65,8 +67,8 @@ function AppRoutes() {
         element={
           isAuthenticated 
             ? <Navigate to={
-                user?.role === 'organizer' 
-                  ? '/organizer/dashboard' 
+                user?.role === 'participant' 
+                  ? '/participant/events' 
                   : user?.role === 'admin' 
                     ? '/admin/dashboard' 
                     : '/dashboard'
@@ -102,20 +104,15 @@ function AppRoutes() {
         </ProtectedRoute>
       } />
 
-      {/* Organizer routes */}
-      <Route path="/organizer/dashboard" element={
-        <ProtectedRoute allowedRoles={['organizer']}>
-          <OrganizerDashboard />
+      {/* Participant routes */}
+      <Route path="/participant/events" element={
+        <ProtectedRoute allowedRoles={['participant']}>
+          <ParticipantEvents />
         </ProtectedRoute>
       } />
-      <Route path="/organizer/participants" element={
-        <ProtectedRoute allowedRoles={['organizer']}>
-          <Participants />
-        </ProtectedRoute>
-      } />
-      <Route path="/organizer/conflicts" element={
-        <ProtectedRoute allowedRoles={['organizer']}>
-          <Conflicts />
+      <Route path="/participant/registrations" element={
+        <ProtectedRoute allowedRoles={['participant']}>
+          <ParticipantRegistrations />
         </ProtectedRoute>
       } />
 
@@ -123,6 +120,21 @@ function AppRoutes() {
       <Route path="/admin/dashboard" element={
         <ProtectedRoute allowedRoles={['admin']}>
           <AdminDashboard />
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/events" element={
+        <ProtectedRoute allowedRoles={['admin']}>
+          <AdminEvents />
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/participants" element={
+        <ProtectedRoute allowedRoles={['admin']}>
+          <AdminParticipants />
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/conflicts" element={
+        <ProtectedRoute allowedRoles={['admin']}>
+          <AdminConflicts />
         </ProtectedRoute>
       } />
       <Route path="/admin/users" element={

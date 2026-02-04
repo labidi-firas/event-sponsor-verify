@@ -19,11 +19,11 @@ const mockUsers: Record<string, User> = {
     role: 'laboratory',
     laboratoryName: 'Laboratoire Pasteur',
   },
-  'organizer@example.com': {
+  'participant@example.com': {
     id: '2',
-    email: 'organizer@example.com',
+    email: 'participant@example.com',
     name: 'Jean Martin',
-    role: 'organizer',
+    role: 'participant',
   },
   'admin@example.com': {
     id: '3',
