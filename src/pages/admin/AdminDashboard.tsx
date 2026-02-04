@@ -22,7 +22,7 @@ export default function AdminDashboard() {
 
   const recentUsers = [
     { name: 'Dr. Marie Dupont', role: 'Laboratoire', lastActive: 'Il y a 5 min' },
-    { name: 'Jean Martin', role: 'Organisateur', lastActive: 'Il y a 12 min' },
+    { name: 'Jean Martin', role: 'Participant', lastActive: 'Il y a 12 min' },
     { name: 'Sophie Bernard', role: 'Admin', lastActive: 'En ligne' },
   ];
 

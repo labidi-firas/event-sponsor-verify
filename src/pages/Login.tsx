@@ -25,15 +25,8 @@ export default function Login() {
     
     if (success) {
       // Role-based redirect
-      const roleRoutes: Record<string, string> = {
-        laboratory: '/dashboard',
-        organizer: '/organizer/dashboard',
-        admin: '/admin/dashboard',
-      };
-      
-      // Get user role from email for demo
       if (email.includes('lab')) navigate('/dashboard');
-      else if (email.includes('organizer')) navigate('/organizer/dashboard');
+      else if (email.includes('participant')) navigate('/participant/events');
       else if (email.includes('admin')) navigate('/admin/dashboard');
       else navigate('/dashboard');
     } else {
@@ -123,7 +116,7 @@ export default function Login() {
               </p>
               <div className="space-y-1 text-xs text-muted-foreground font-mono">
                 <p>lab@example.com / demo123 (Laboratoire)</p>
-                <p>organizer@example.com / demo123 (Organisateur)</p>
+                <p>participant@example.com / demo123 (Participant)</p>
                 <p>admin@example.com / demo123 (Admin)</p>
               </div>
             </div>

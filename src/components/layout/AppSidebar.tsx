@@ -11,6 +11,8 @@ import {
   AlertTriangle,
   LogOut,
   Building2,
+  ListChecks,
+  UserCheck,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
@@ -31,13 +33,15 @@ const navItems: NavItem[] = [
   { icon: FileText, label: 'Déclarations', path: '/sponsorships', roles: ['laboratory'] },
   { icon: Upload, label: 'Importer', path: '/import', roles: ['laboratory'] },
   
-  // Organizer items
-  { icon: LayoutDashboard, label: 'Tableau de bord', path: '/organizer/dashboard', roles: ['organizer'] },
-  { icon: Users, label: 'Participants', path: '/organizer/participants', roles: ['organizer'] },
-  { icon: AlertTriangle, label: 'Conflits', path: '/organizer/conflicts', roles: ['organizer'] },
+  // Participant items
+  { icon: Calendar, label: 'Événements', path: '/participant/events', roles: ['participant'] },
+  { icon: ListChecks, label: 'Mes inscriptions', path: '/participant/registrations', roles: ['participant'] },
   
   // Admin items
   { icon: LayoutDashboard, label: 'Tableau de bord', path: '/admin/dashboard', roles: ['admin'] },
+  { icon: Calendar, label: 'Événements', path: '/admin/events', roles: ['admin'] },
+  { icon: UserCheck, label: 'Participants officiels', path: '/admin/participants', roles: ['admin'] },
+  { icon: AlertTriangle, label: 'Conflits', path: '/admin/conflicts', roles: ['admin'] },
   { icon: Users, label: 'Utilisateurs', path: '/admin/users', roles: ['admin'] },
   { icon: Brain, label: 'Configuration IA', path: '/admin/ai-config', roles: ['admin'] },
 ];
@@ -86,7 +90,7 @@ export function AppSidebar() {
               <p className="text-sm font-medium truncate">{user.name}</p>
               <p className="text-xs text-sidebar-foreground/70 truncate">
                 {user.role === 'laboratory' && user.laboratoryName}
-                {user.role === 'organizer' && 'Organisateur'}
+                {user.role === 'participant' && 'Participant'}
                 {user.role === 'admin' && 'Administrateur'}
               </p>
             </div>
