@@ -4,9 +4,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Shield, Loader2, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { Shield, Loader2, AlertCircle, Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import loginIllustration from '@/assets/login-illustration.jpg';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -30,7 +29,7 @@ export default function Login() {
       else if (email.includes('admin')) navigate('/admin/dashboard');
       else navigate('/dashboard');
     } else {
-      setError('Email ou mot de passe incorrect');
+      setError('Invalid email or password');
     }
     
     setIsLoading(false);
@@ -41,70 +40,64 @@ export default function Login() {
     setPassword('demo123');
   };
 
+  const demoAccounts = [
+    { label: 'Laboratory', email: 'lab@example.com', desc: 'Manage declarations & events' },
+    { label: 'Participant', email: 'participant@example.com', desc: 'Browse events & register' },
+    { label: 'Administrator', email: 'admin@example.com', desc: 'Full platform oversight' },
+  ];
+
   return (
-    <div className="min-h-screen flex">
-      {/* Left - Illustration Panel */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
-        <img
-          src={loginIllustration}
-          alt="VerifLab"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/80 to-primary/40 mix-blend-multiply" />
-        <div className="relative z-10 flex flex-col justify-between p-12 text-primary-foreground">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-primary-foreground/20 backdrop-blur flex items-center justify-center">
-              <Shield className="w-5 h-5" />
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <div className="w-full max-w-[960px] grid lg:grid-cols-2 rounded-2xl border border-border bg-card shadow-xl overflow-hidden">
+        {/* Left – Branding */}
+        <div className="hidden lg:flex flex-col justify-between p-10 bg-primary text-primary-foreground">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-lg bg-primary-foreground/15 backdrop-blur-sm flex items-center justify-center">
+              <Shield className="w-[18px] h-[18px]" />
             </div>
-            <span className="text-xl font-bold">VerifLab</span>
+            <span className="text-lg font-bold tracking-tight">VerifLab</span>
           </div>
-          <div className="space-y-6 max-w-md">
-            <h2 className="text-4xl font-bold leading-tight">
-              Vérification Intelligente de Prise en Charge
+
+          <div className="space-y-5">
+            <h2 className="text-3xl font-bold leading-snug">
+              Intelligent Sponsorship Verification
             </h2>
-            <p className="text-primary-foreground/80 text-lg leading-relaxed">
-              Plateforme sécurisée de gestion et de vérification des prises en charge pour les événements médicaux.
+            <p className="text-primary-foreground/70 leading-relaxed">
+              Secure platform for managing and verifying sponsorship declarations for medical events — powered by AI scoring.
             </p>
-            <div className="flex gap-8 pt-4">
-              <div>
-                <p className="text-3xl font-bold">98%</p>
-                <p className="text-sm text-primary-foreground/70">Précision IA</p>
-              </div>
-              <div>
-                <p className="text-3xl font-bold">2k+</p>
-                <p className="text-sm text-primary-foreground/70">Événements</p>
-              </div>
-              <div>
-                <p className="text-3xl font-bold">50k+</p>
-                <p className="text-sm text-primary-foreground/70">Participants</p>
-              </div>
+            <div className="grid grid-cols-3 gap-4 pt-2">
+              {[
+                { value: '98%', label: 'AI Accuracy' },
+                { value: '2k+', label: 'Events' },
+                { value: '50k+', label: 'Participants' },
+              ].map((s) => (
+                <div key={s.label} className="rounded-lg bg-primary-foreground/10 p-3 text-center">
+                  <p className="text-xl font-bold">{s.value}</p>
+                  <p className="text-[11px] text-primary-foreground/60 mt-0.5">{s.label}</p>
+                </div>
+              ))}
             </div>
           </div>
-          <p className="text-sm text-primary-foreground/50">
-            © 2024 HeadsApp — Tous droits réservés
-          </p>
+
+          <p className="text-xs text-primary-foreground/40">© 2025 HeadsApp · All rights reserved</p>
         </div>
-      </div>
 
-      {/* Right - Login Form */}
-      <div className="flex-1 flex items-center justify-center p-6 sm:p-12 bg-background">
-        <div className="w-full max-w-[420px] space-y-8 animate-fade-in-up">
+        {/* Right – Form */}
+        <div className="flex flex-col justify-center p-8 sm:p-10">
           {/* Mobile logo */}
-          <div className="lg:hidden flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
-              <Shield className="w-5 h-5 text-primary-foreground" />
+          <div className="lg:hidden flex items-center gap-2.5 mb-8">
+            <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center">
+              <Shield className="w-[18px] h-[18px] text-primary-foreground" />
             </div>
-            <span className="text-xl font-bold text-foreground">VerifLab</span>
+            <span className="text-lg font-bold text-foreground">VerifLab</span>
           </div>
 
-          <div>
-            <h1 className="text-3xl font-bold text-foreground">Bon retour 👋</h1>
-            <p className="text-muted-foreground mt-2">
-              Connectez-vous pour accéder à votre espace
-            </p>
+          <div className="mb-8">
+            <h1 className="text-2xl font-bold text-foreground">Sign in to your account</h1>
+            <p className="text-sm text-muted-foreground mt-1">Enter your credentials to continue</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
@@ -112,31 +105,32 @@ export default function Login() {
               </Alert>
             )}
 
-            <div className="space-y-2">
-              <Label htmlFor="email">Adresse email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="votre@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                autoComplete="email"
-                className="h-12"
-              />
+            <div className="space-y-1.5">
+              <Label htmlFor="email" className="text-xs font-medium">Email</Label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="you@company.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  autoComplete="email"
+                  className="h-11 pl-9"
+                />
+              </div>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password">Mot de passe</Label>
-                <button
-                  type="button"
-                  className="text-xs text-primary hover:underline"
-                >
-                  Mot de passe oublié ?
+                <Label htmlFor="password" className="text-xs font-medium">Password</Label>
+                <button type="button" className="text-xs text-primary hover:underline">
+                  Forgot password?
                 </button>
               </div>
               <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
@@ -145,7 +139,7 @@ export default function Login() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   autoComplete="current-password"
-                  className="h-12 pr-10"
+                  className="h-11 pl-9 pr-10"
                 />
                 <button
                   type="button"
@@ -157,48 +151,41 @@ export default function Login() {
               </div>
             </div>
 
-            <Button
-              type="submit"
-              className="w-full h-12 text-base"
-              disabled={isLoading}
-            >
+            <Button type="submit" className="w-full h-11" disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Connexion...
+                  Signing in…
                 </>
               ) : (
-                'Se connecter'
+                'Sign in'
               )}
             </Button>
           </form>
 
           {/* Demo accounts */}
-          <div className="space-y-3">
+          <div className="mt-8 space-y-3">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <span className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-xs">
-                <span className="bg-background px-3 text-muted-foreground">
-                  Comptes de démonstration
-                </span>
+                <span className="bg-card px-3 text-muted-foreground">Demo accounts</span>
               </div>
             </div>
-            <div className="grid grid-cols-3 gap-2">
-              {[
-                { label: 'Labo', email: 'lab@example.com', icon: '🔬' },
-                { label: 'Participant', email: 'participant@example.com', icon: '👤' },
-                { label: 'Admin', email: 'admin@example.com', icon: '⚙️' },
-              ].map((demo) => (
+            <div className="space-y-2">
+              {demoAccounts.map((demo) => (
                 <button
                   key={demo.email}
                   type="button"
                   onClick={() => fillDemo(demo.email)}
-                  className="flex flex-col items-center gap-1 p-3 rounded-lg border border-border bg-card hover:bg-accent transition-colors text-sm"
+                  className="w-full flex items-center justify-between p-3 rounded-lg border border-border hover:bg-accent transition-colors text-left"
                 >
-                  <span className="text-lg">{demo.icon}</span>
-                  <span className="text-xs font-medium text-foreground">{demo.label}</span>
+                  <div>
+                    <p className="text-sm font-medium text-foreground">{demo.label}</p>
+                    <p className="text-xs text-muted-foreground">{demo.desc}</p>
+                  </div>
+                  <span className="text-xs text-muted-foreground font-mono">{demo.email}</span>
                 </button>
               ))}
             </div>
