@@ -11,8 +11,8 @@ import { Calendar, MapPin, Users, ArrowLeft, CheckCircle, User, Mail, Phone, Bui
 import { useToast } from '@/hooks/use-toast';
 
 const specialties = [
-  'Cardiologie', 'Dermatologie', 'Neurologie', 'Oncologie', 'Pédiatrie',
-  'Chirurgie générale', 'Médecine interne', 'Radiologie', 'Anesthésiologie', 'Autre',
+  'Cardiology', 'Dermatology', 'Neurology', 'Oncology', 'Pediatrics',
+  'General Surgery', 'Internal Medicine', 'Radiology', 'Anesthesiology', 'Other',
 ];
 
 export default function ParticipantRegister() {
@@ -29,12 +29,12 @@ export default function ParticipantRegister() {
 
   if (!event) {
     return (
-      <AppLayout title="Événement introuvable" subtitle="">
+      <AppLayout title="Event Not Found" subtitle="">
         <div className="text-center py-12">
-          <p className="text-muted-foreground mb-4">Cet événement n'existe pas.</p>
+          <p className="text-muted-foreground mb-4">This event does not exist.</p>
           <Button onClick={() => navigate('/participant/events')}>
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Retour aux événements
+            Back to Events
           </Button>
         </div>
       </AppLayout>
@@ -48,36 +48,36 @@ export default function ParticipantRegister() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.firstName || !formData.lastName || !formData.email || !formData.specialty) {
-      toast({ title: 'Champs requis', description: 'Veuillez remplir tous les champs obligatoires.', variant: 'destructive' });
+      toast({ title: 'Required fields', description: 'Please fill in all required fields.', variant: 'destructive' });
       return;
     }
     setIsSubmitting(true);
     await new Promise(resolve => setTimeout(resolve, 1200));
     setIsSubmitting(false);
     setIsSubmitted(true);
-    toast({ title: 'Inscription envoyée !', description: "Votre demande d'inscription a été soumise avec succès." });
+    toast({ title: 'Registration submitted!', description: 'Your registration request has been sent successfully.' });
   };
 
   if (isSubmitted) {
     return (
-      <AppLayout title="Inscription confirmée" subtitle="">
-        <div className="max-w-lg mx-auto text-center py-16 animate-fade-in-up">
-          <div className="w-20 h-20 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-6 ring-4 ring-success/20">
-            <CheckCircle className="w-10 h-10 text-success" />
+      <AppLayout title="Registration Confirmed" subtitle="">
+        <div className="max-w-lg mx-auto text-center py-16 animate-fade-in">
+          <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-5">
+            <CheckCircle className="w-8 h-8 text-primary" />
           </div>
-          <h2 className="text-3xl font-bold mb-3 text-foreground">Inscription envoyée !</h2>
+          <h2 className="text-2xl font-bold mb-2 text-foreground">Registration Submitted</h2>
           <p className="text-muted-foreground mb-1">
-            Votre demande d'inscription à <strong className="text-foreground">{event.name}</strong> a été soumise.
+            Your registration for <strong className="text-foreground">{event.name}</strong> has been received.
           </p>
-          <p className="text-muted-foreground mb-10">
-            Vous recevrez une confirmation par email une fois votre inscription validée.
+          <p className="text-muted-foreground mb-8">
+            You will receive a confirmation email once your registration is approved.
           </p>
           <div className="flex gap-3 justify-center">
-            <Button variant="outline" size="lg" onClick={() => navigate('/participant/events')}>
-              Voir les événements
+            <Button variant="outline" onClick={() => navigate('/participant/events')}>
+              Browse Events
             </Button>
-            <Button size="lg" onClick={() => navigate('/participant/registrations')}>
-              Mes inscriptions
+            <Button onClick={() => navigate('/participant/registrations')}>
+              My Registrations
             </Button>
           </div>
         </div>
@@ -87,103 +87,95 @@ export default function ParticipantRegister() {
 
   return (
     <AppLayout
-      title={`Inscription : ${event.name}`}
-      subtitle="Remplissez le formulaire pour vous inscrire à cet événement"
+      title={`Register: ${event.name}`}
+      subtitle="Complete the form below to register for this event"
     >
-      <div className="max-w-3xl mx-auto space-y-6 animate-fade-in-up">
-        {/* Event banner */}
-        <div className="rounded-xl gradient-primary p-6 text-primary-foreground">
-          <h3 className="text-lg font-semibold mb-3">{event.name}</h3>
-          <div className="flex flex-wrap gap-6 text-sm text-primary-foreground/80">
-            <span className="flex items-center gap-2"><Calendar className="w-4 h-4" />{event.date}</span>
-            <span className="flex items-center gap-2"><MapPin className="w-4 h-4" />{event.location}</span>
-            <span className="flex items-center gap-2"><Users className="w-4 h-4" />{event.participantCount} participants</span>
+      <div className="max-w-3xl mx-auto space-y-6">
+        {/* Event summary */}
+        <div className="rounded-xl border border-border bg-card p-5 flex flex-wrap gap-6 items-center">
+          <div className="flex-1 min-w-[200px]">
+            <h3 className="font-semibold text-foreground">{event.name}</h3>
+            <div className="flex flex-wrap gap-4 mt-2 text-sm text-muted-foreground">
+              <span className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5" />{event.date}</span>
+              <span className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" />{event.location}</span>
+              <span className="flex items-center gap-1.5"><Users className="w-3.5 h-3.5" />{event.participantCount} participants</span>
+            </div>
           </div>
         </div>
 
         {/* Form */}
-        <div className="rounded-xl border border-border bg-card p-8">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-              <FileText className="w-5 h-5 text-primary" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-foreground">Formulaire d'inscription</h3>
-              <p className="text-sm text-muted-foreground">Les champs marqués d'un * sont obligatoires</p>
-            </div>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="rounded-xl border border-border bg-card p-6 sm:p-8">
+          <form onSubmit={handleSubmit} className="space-y-8">
             {/* Identity */}
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
-                <User className="w-3.5 h-3.5" /> Identité
-              </p>
+            <fieldset className="space-y-4">
+              <legend className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2 mb-1">
+                <User className="w-3.5 h-3.5" /> Personal Information
+              </legend>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">Nom *</Label>
-                  <Input id="lastName" placeholder="Votre nom" value={formData.lastName} onChange={e => handleChange('lastName', e.target.value)} required className="h-11" />
+                <div className="space-y-1.5">
+                  <Label htmlFor="lastName" className="text-xs">Last Name *</Label>
+                  <Input id="lastName" placeholder="Doe" value={formData.lastName} onChange={e => handleChange('lastName', e.target.value)} required className="h-10" />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">Prénom *</Label>
-                  <Input id="firstName" placeholder="Votre prénom" value={formData.firstName} onChange={e => handleChange('firstName', e.target.value)} required className="h-11" />
+                <div className="space-y-1.5">
+                  <Label htmlFor="firstName" className="text-xs">First Name *</Label>
+                  <Input id="firstName" placeholder="John" value={formData.firstName} onChange={e => handleChange('firstName', e.target.value)} required className="h-10" />
                 </div>
               </div>
-            </div>
+            </fieldset>
 
             {/* Contact */}
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
-                <Mail className="w-3.5 h-3.5" /> Contact
-              </p>
+            <fieldset className="space-y-4">
+              <legend className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2 mb-1">
+                <Mail className="w-3.5 h-3.5" /> Contact Details
+              </legend>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email *</Label>
-                  <Input id="email" type="email" placeholder="votre.email@exemple.com" value={formData.email} onChange={e => handleChange('email', e.target.value)} required className="h-11" />
+                <div className="space-y-1.5">
+                  <Label htmlFor="email" className="text-xs">Email *</Label>
+                  <Input id="email" type="email" placeholder="john.doe@example.com" value={formData.email} onChange={e => handleChange('email', e.target.value)} required className="h-10" />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Téléphone</Label>
-                  <Input id="phone" type="tel" placeholder="+33 6 12 34 56 78" value={formData.phone} onChange={e => handleChange('phone', e.target.value)} className="h-11" />
+                <div className="space-y-1.5">
+                  <Label htmlFor="phone" className="text-xs">Phone</Label>
+                  <Input id="phone" type="tel" placeholder="+1 (555) 000-0000" value={formData.phone} onChange={e => handleChange('phone', e.target.value)} className="h-10" />
                 </div>
               </div>
-            </div>
+            </fieldset>
 
             {/* Professional */}
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
-                <Stethoscope className="w-3.5 h-3.5" /> Professionnel
-              </p>
+            <fieldset className="space-y-4">
+              <legend className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2 mb-1">
+                <Stethoscope className="w-3.5 h-3.5" /> Professional Background
+              </legend>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="specialty">Spécialité *</Label>
+                <div className="space-y-1.5">
+                  <Label htmlFor="specialty" className="text-xs">Specialty *</Label>
                   <Select value={formData.specialty} onValueChange={v => handleChange('specialty', v)}>
-                    <SelectTrigger className="h-11"><SelectValue placeholder="Sélectionnez" /></SelectTrigger>
+                    <SelectTrigger className="h-10"><SelectValue placeholder="Select specialty" /></SelectTrigger>
                     <SelectContent>
                       {specialties.map(s => (<SelectItem key={s} value={s}>{s}</SelectItem>))}
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="institution">Établissement</Label>
-                  <Input id="institution" placeholder="Hôpital / Clinique" value={formData.institution} onChange={e => handleChange('institution', e.target.value)} className="h-11" />
+                <div className="space-y-1.5">
+                  <Label htmlFor="institution" className="text-xs">Institution</Label>
+                  <Input id="institution" placeholder="Hospital / Clinic" value={formData.institution} onChange={e => handleChange('institution', e.target.value)} className="h-10" />
                 </div>
               </div>
-            </div>
+            </fieldset>
 
             {/* Motivation */}
-            <div className="space-y-2">
-              <Label htmlFor="motivation">Motivation (optionnel)</Label>
-              <Textarea id="motivation" placeholder="Pourquoi souhaitez-vous participer à cet événement ?" value={formData.motivation} onChange={e => handleChange('motivation', e.target.value)} rows={3} />
+            <div className="space-y-1.5">
+              <Label htmlFor="motivation" className="text-xs">Motivation (optional)</Label>
+              <Textarea id="motivation" placeholder="Why would you like to attend this event?" value={formData.motivation} onChange={e => handleChange('motivation', e.target.value)} rows={3} />
             </div>
 
             {/* Actions */}
-            <div className="flex gap-3 pt-2 border-t border-border">
-              <Button type="button" variant="outline" size="lg" onClick={() => navigate('/participant/events')}>
+            <div className="flex gap-3 pt-4 border-t border-border">
+              <Button type="button" variant="outline" onClick={() => navigate('/participant/events')}>
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Retour
+                Back
               </Button>
-              <Button type="submit" size="lg" disabled={isSubmitting} className="flex-1">
-                {isSubmitting ? 'Envoi en cours...' : "Confirmer l'inscription"}
+              <Button type="submit" disabled={isSubmitting} className="flex-1">
+                {isSubmitting ? 'Submitting…' : 'Confirm Registration'}
               </Button>
             </div>
           </form>
