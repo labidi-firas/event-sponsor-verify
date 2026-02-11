@@ -19,6 +19,7 @@ import Import from "./pages/laboratory/Import";
 // Participant Pages
 import ParticipantEvents from "./pages/participant/Events";
 import ParticipantRegistrations from "./pages/participant/Registrations";
+import ParticipantRegister from "./pages/participant/Register";
 
 // Admin Pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -113,6 +114,11 @@ function AppRoutes() {
       <Route path="/participant/registrations" element={
         <ProtectedRoute allowedRoles={['participant']}>
           <ParticipantRegistrations />
+        </ProtectedRoute>
+      } />
+      <Route path="/participant/register/:eventId" element={
+        <ProtectedRoute allowedRoles={['participant']}>
+          <ParticipantRegister />
         </ProtectedRoute>
       } />
 
