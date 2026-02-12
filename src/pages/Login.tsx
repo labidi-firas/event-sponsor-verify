@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Shield, Loader2, AlertCircle, Eye, EyeOff, Activity, Users, BarChart3 } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Shield, Loader2, Eye, EyeOff } from 'lucide-react';
 import medicalTeam from '@/assets/medical-team.jpg';
 
 export default function Login() {
@@ -23,16 +22,14 @@ export default function Login() {
     setIsLoading(true);
 
     const success = await login(email, password);
-    
     if (success) {
       if (email.includes('lab')) navigate('/dashboard');
       else if (email.includes('participant')) navigate('/participant/events');
       else if (email.includes('admin')) navigate('/admin/dashboard');
       else navigate('/dashboard');
     } else {
-      setError('Invalid email or password');
+      setError('Failed to sign in. Please check your credentials.');
     }
-    
     setIsLoading(false);
   };
 
@@ -41,158 +38,197 @@ export default function Login() {
     setPassword('demo123');
   };
 
-  const demoAccounts = [
-    { label: 'Laboratory', email: 'lab@example.com', icon: Activity },
-    { label: 'Participant', email: 'participant@example.com', icon: Users },
-    { label: 'Admin', email: 'admin@example.com', icon: BarChart3 },
-  ];
-
   return (
-    <div className="min-h-screen flex bg-[hsl(180,30%,95%)]">
-      {/* Left – Illustration panel */}
-      <div className="hidden lg:flex lg:w-1/2 xl:w-[55%] relative items-center justify-center p-12 overflow-hidden">
-        {/* Decorative background shapes */}
-        <div className="absolute top-0 right-0 w-64 h-64 opacity-10" style={{
-          backgroundImage: 'radial-gradient(circle, hsl(var(--primary)) 1px, transparent 1px)',
-          backgroundSize: '20px 20px',
-        }} />
-        <div className="absolute bottom-20 left-10 w-20 h-20 rounded-full bg-primary/10" />
-        <div className="absolute top-16 left-20 text-primary/20 text-4xl font-bold">+</div>
-        <div className="absolute bottom-32 right-24 text-primary/15 text-3xl font-bold">+</div>
-
-        <div className="relative z-10 flex flex-col items-center text-center max-w-md">
-          {/* Logo */}
-          <div className="flex items-center gap-2.5 mb-8">
-            <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
-              <Shield className="w-5 h-5 text-primary-foreground" />
-            </div>
-            <div className="text-left">
-              <span className="text-lg font-bold text-foreground tracking-tight">VerifLab</span>
-              <p className="text-[10px] text-muted-foreground -mt-0.5">by HeadsApp</p>
-            </div>
+    <div className="min-h-screen flex bg-background">
+      {/* Left Side - Illustration */}
+      <div className="hidden lg:flex lg:w-1/2 xl:w-[55%] relative items-center justify-center overflow-hidden bg-[hsl(180,30%,95%)]">
+        {/* Logo at top */}
+        <div className="absolute top-6 left-8 flex items-center gap-2.5 z-20">
+          <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center">
+            <Shield className="w-4.5 h-4.5 text-primary-foreground" />
           </div>
-
-          {/* Illustration */}
-          <img
-            src={medicalTeam}
-            alt="Medical professionals team"
-            className="w-80 h-auto mb-8 drop-shadow-lg"
-          />
-
-          <h2 className="text-xl font-bold text-foreground mb-2">Welcome Back</h2>
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            AI-powered compliance platform for managing medical event sponsorship declarations.
-          </p>
+          <div>
+            <p className="text-sm font-bold text-foreground tracking-tight leading-none">VerifLab</p>
+            <p className="text-[9px] text-muted-foreground">by HeadsApp</p>
+          </div>
         </div>
 
-        <p className="absolute bottom-6 text-[11px] text-muted-foreground/50">
-          © 2025 HeadsApp · All rights reserved
-        </p>
+        {/* Decorative Elements */}
+        <div className="absolute top-12 right-16 w-48 h-48 opacity-[0.07]" style={{
+          backgroundImage: 'radial-gradient(circle, hsl(var(--primary)) 1.5px, transparent 1.5px)',
+          backgroundSize: '16px 16px',
+        }} />
+        <div className="absolute bottom-24 left-12 w-32 h-32 opacity-[0.07]" style={{
+          backgroundImage: 'radial-gradient(circle, hsl(var(--primary)) 1.5px, transparent 1.5px)',
+          backgroundSize: '16px 16px',
+        }} />
+        <div className="absolute top-20 left-24 text-primary/15 text-3xl font-bold select-none">+</div>
+        <div className="absolute bottom-36 right-20 text-primary/10 text-2xl font-bold select-none">+</div>
+
+        {/* Decorative circles */}
+        <div className="absolute top-1/4 right-12">
+          <svg width="60" height="60" viewBox="0 0 60 60" className="opacity-10">
+            <circle cx="30" cy="30" r="28" stroke="hsl(var(--primary))" strokeWidth="2" fill="none" />
+            <circle cx="30" cy="30" r="18" stroke="hsl(var(--primary))" strokeWidth="1.5" fill="none" />
+            <circle cx="30" cy="30" r="8" fill="hsl(var(--primary))" opacity="0.3" />
+          </svg>
+        </div>
+
+        {/* Medical Team Illustration Container */}
+        <div className="relative z-10 flex flex-col items-center text-center max-w-sm px-8">
+          {/* Illustration Card */}
+          <div className="w-72 h-auto rounded-2xl overflow-hidden shadow-xl mb-6 border border-border/30">
+            <img
+              src={medicalTeam}
+              alt="Medical professionals team"
+              className="w-full h-full object-cover"
+            />
+          </div>
+
+          {/* Welcome Text */}
+          <div className="space-y-2">
+            <h2 className="text-lg font-bold text-foreground">Welcome Back</h2>
+            <p className="text-xs text-muted-foreground leading-relaxed max-w-[280px]">
+              AI-powered compliance platform for managing medical event sponsorship declarations
+            </p>
+            <p className="text-[10px] text-muted-foreground/40 pt-4">
+              © 2025 HeadsApp - All rights reserved
+            </p>
+          </div>
+        </div>
       </div>
 
-      {/* Right – Form card */}
-      <div className="flex-1 flex items-center justify-center p-6 sm:p-10">
-        <div className="w-full max-w-[420px] bg-card rounded-2xl shadow-lg border border-border p-8 sm:p-10">
-          {/* Mobile logo */}
-          <div className="lg:hidden flex items-center gap-2.5 mb-8">
-            <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center">
+      {/* Right Side - Login Form */}
+      <div className="flex-1 flex items-center justify-center p-6 sm:p-8">
+        <div className="w-full max-w-[380px]">
+          {/* Logo at top of form */}
+          <div className="flex items-center gap-2 mb-6">
+            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
               <Shield className="w-4 h-4 text-primary-foreground" />
             </div>
-            <span className="text-lg font-bold text-foreground">VerifLab</span>
+            <div>
+              <p className="text-sm font-bold text-foreground leading-none">VerifLab</p>
+              <p className="text-[9px] text-muted-foreground">by HeadsApp</p>
+            </div>
           </div>
 
-          <div className="text-center mb-8">
-            <div className="hidden lg:flex w-12 h-12 rounded-2xl bg-primary/10 items-center justify-center mx-auto mb-4">
-              <Shield className="w-6 h-6 text-primary" />
-            </div>
-            <h1 className="text-xl font-bold text-foreground">Sign In</h1>
-            <p className="text-sm text-muted-foreground mt-1">Enter your credentials to continue</p>
+          {/* Tab Navigation */}
+          <div className="flex gap-1 mb-5 border-b border-border">
+            <button className="px-4 py-2 text-xs font-semibold text-primary border-b-2 border-primary">
+              Sign In
+            </button>
+            <button className="px-4 py-2 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors">
+              Sign Up
+            </button>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
-              <Alert variant="destructive" className="py-3">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription className="text-sm">{error}</AlertDescription>
-              </Alert>
-            )}
-
-            <div className="space-y-1.5">
-              <Label htmlFor="email" className="text-xs font-medium text-muted-foreground">Email Address</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="name@company.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                autoComplete="email"
-                className="h-11 bg-secondary/50 border-border"
-              />
+          {/* Sign In Card */}
+          <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
+            {/* Header */}
+            <div className="mb-5">
+              <h1 className="text-base font-bold text-foreground">Sign In</h1>
+              <p className="text-xs text-muted-foreground mt-0.5">Enter your credentials to continue</p>
             </div>
 
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="text-xs font-medium text-muted-foreground">Password</Label>
-                <button type="button" className="text-[11px] text-primary hover:text-primary/80 font-medium">
-                  Forgot password?
-                </button>
-              </div>
-              <div className="relative">
+            <form onSubmit={handleSubmit} className="space-y-3.5">
+              {error && (
+                <div className="bg-destructive/10 text-destructive text-xs p-2.5 rounded-lg border border-destructive/20">
+                  {error}
+                </div>
+              )}
+
+              {/* Email Field */}
+              <div className="space-y-1">
+                <Label htmlFor="email" className="text-[11px] font-medium text-muted-foreground">
+                  Email Address
+                </Label>
                 <Input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  id="email"
+                  type="email"
+                  placeholder="name@company.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
-                  autoComplete="current-password"
-                  className="h-11 pr-10 bg-secondary/50 border-border"
+                  disabled={isLoading}
+                  className="h-8 px-2.5 text-xs"
                 />
+              </div>
+
+              {/* Password Field */}
+              <div className="space-y-1">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="password" className="text-[11px] font-medium text-muted-foreground">
+                    Password
+                  </Label>
+                  <button type="button" className="text-[10px] text-primary hover:text-primary/80 font-medium">
+                    Forgot?
+                  </button>
+                </div>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    disabled={isLoading}
+                    className="h-8 px-2.5 pr-9 text-xs"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Login Button */}
+              <Button type="submit" className="w-full h-9 text-xs font-semibold rounded-lg" disabled={isLoading}>
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
+                    Signing in...
+                  </>
+                ) : (
+                  'LOGIN'
+                )}
+              </Button>
+            </form>
+
+            {/* Quick Access Demo Section */}
+            <div className="mt-5 pt-4 border-t border-border">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/50 mb-2.5 text-center">
+                QUICK ACCESS — DEMO
+              </p>
+              <div className="flex gap-2">
                 <button
                   type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  onClick={() => fillDemo('lab@example.com')}
+                  className="flex-1 flex flex-col items-center gap-1 p-2.5 rounded-lg border border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all"
                 >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  <span className="text-base">🔬</span>
+                  <span className="text-[10px] font-medium text-primary">Laboratory</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => fillDemo('participant@example.com')}
+                  className="flex-1 flex flex-col items-center gap-1 p-2.5 rounded-lg border border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all"
+                >
+                  <span className="text-base">👤</span>
+                  <span className="text-[10px] font-medium text-primary">Participant</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => fillDemo('admin@example.com')}
+                  className="flex-1 flex flex-col items-center gap-1 p-2.5 rounded-lg border border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all"
+                >
+                  <span className="text-base">📊</span>
+                  <span className="text-[10px] font-medium text-primary">Admin</span>
                 </button>
               </div>
-            </div>
-
-            <Button type="submit" className="w-full h-11 font-medium text-sm rounded-xl" disabled={isLoading}>
-              {isLoading ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Signing in…
-                </>
-              ) : (
-                'LOGIN'
-              )}
-            </Button>
-          </form>
-
-          {/* Demo accounts */}
-          <div className="mt-8 pt-6 border-t border-border">
-            <p className="text-[11px] font-medium uppercase tracking-widest text-muted-foreground/60 mb-3 text-center">
-              Quick Access — Demo
-            </p>
-            <div className="flex gap-2">
-              {demoAccounts.map((demo) => {
-                const Icon = demo.icon;
-                return (
-                  <button
-                    key={demo.email}
-                    type="button"
-                    onClick={() => fillDemo(demo.email)}
-                    className="flex-1 flex flex-col items-center gap-1.5 p-3 rounded-xl border border-border bg-secondary/30 hover:bg-accent hover:border-primary/20 transition-all group"
-                  >
-                    <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                      <Icon className="w-3.5 h-3.5 text-primary" />
-                    </div>
-                    <span className="text-[11px] font-medium text-muted-foreground group-hover:text-foreground">{demo.label}</span>
-                  </button>
-                );
-              })}
             </div>
           </div>
         </div>
