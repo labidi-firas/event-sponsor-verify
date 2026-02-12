@@ -4,7 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Shield, Loader2, AlertCircle, Eye, EyeOff, Lock, Mail } from 'lucide-react';
+import { Shield, Loader2, AlertCircle, Eye, EyeOff, Lock, Mail, Activity, Users, BarChart3 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 export default function Login() {
@@ -41,117 +41,139 @@ export default function Login() {
   };
 
   const demoAccounts = [
-    { label: 'Laboratory', email: 'lab@example.com', desc: 'Manage declarations & events' },
-    { label: 'Participant', email: 'participant@example.com', desc: 'Browse events & register' },
-    { label: 'Administrator', email: 'admin@example.com', desc: 'Full platform oversight' },
+    { label: 'Laboratory', email: 'lab@example.com', icon: Activity },
+    { label: 'Participant', email: 'participant@example.com', icon: Users },
+    { label: 'Administrator', email: 'admin@example.com', icon: BarChart3 },
   ];
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <div className="w-full max-w-[960px] grid lg:grid-cols-2 rounded-2xl border border-border bg-card shadow-xl overflow-hidden">
-        {/* Left – Branding */}
-        <div className="hidden lg:flex flex-col justify-between p-10 bg-primary text-primary-foreground">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-lg bg-primary-foreground/15 backdrop-blur-sm flex items-center justify-center">
-              <Shield className="w-[18px] h-[18px]" />
-            </div>
-            <span className="text-lg font-bold tracking-tight">VerifLab</span>
-          </div>
+    <div className="min-h-screen flex bg-background">
+      {/* Left – Dark sidebar branding */}
+      <div className="hidden lg:flex lg:w-[480px] xl:w-[520px] flex-col justify-between p-12 bg-sidebar-background text-sidebar-foreground relative overflow-hidden">
+        {/* Subtle grid pattern */}
+        <div className="absolute inset-0 opacity-[0.03]" style={{
+          backgroundImage: 'radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)',
+          backgroundSize: '32px 32px',
+        }} />
 
-          <div className="space-y-5">
-            <h2 className="text-3xl font-bold leading-snug">
-              Intelligent Sponsorship Verification
-            </h2>
-            <p className="text-primary-foreground/70 leading-relaxed">
-              Secure platform for managing and verifying sponsorship declarations for medical events — powered by AI scoring.
-            </p>
-            <div className="grid grid-cols-3 gap-4 pt-2">
-              {[
-                { value: '98%', label: 'AI Accuracy' },
-                { value: '2k+', label: 'Events' },
-                { value: '50k+', label: 'Participants' },
-              ].map((s) => (
-                <div key={s.label} className="rounded-lg bg-primary-foreground/10 p-3 text-center">
-                  <p className="text-xl font-bold">{s.value}</p>
-                  <p className="text-[11px] text-primary-foreground/60 mt-0.5">{s.label}</p>
-                </div>
-              ))}
+        <div className="relative z-10">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-sidebar-primary flex items-center justify-center">
+              <Shield className="w-5 h-5 text-sidebar-primary-foreground" />
+            </div>
+            <div>
+              <span className="text-lg font-bold tracking-tight">VerifLab</span>
+              <p className="text-[11px] text-sidebar-foreground/50 -mt-0.5">by HeadsApp</p>
             </div>
           </div>
-
-          <p className="text-xs text-primary-foreground/40">© 2025 HeadsApp · All rights reserved</p>
         </div>
 
-        {/* Right – Form */}
-        <div className="flex flex-col justify-center p-8 sm:p-10">
+        <div className="relative z-10 space-y-8">
+          <div>
+            <p className="text-xs font-medium uppercase tracking-widest text-sidebar-primary mb-4">Enterprise Platform</p>
+            <h2 className="text-[2rem] font-bold leading-[1.15] tracking-tight">
+              Sponsorship
+              <br />
+              Verification
+              <br />
+              <span className="text-sidebar-primary">Intelligence</span>
+            </h2>
+          </div>
+
+          <p className="text-[15px] text-sidebar-foreground/60 leading-relaxed max-w-sm">
+            AI-powered compliance platform for managing and verifying medical event sponsorship declarations.
+          </p>
+
+          <div className="space-y-3 pt-2">
+            {[
+              { value: '98%', label: 'AI verification accuracy' },
+              { value: '2,400+', label: 'Events monitored' },
+              { value: '50,000+', label: 'Declarations processed' },
+            ].map((stat) => (
+              <div key={stat.label} className="flex items-baseline gap-4">
+                <span className="text-2xl font-bold text-sidebar-primary tabular-nums w-24">{stat.value}</span>
+                <span className="text-sm text-sidebar-foreground/50">{stat.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <p className="relative z-10 text-[11px] text-sidebar-foreground/30">
+          © 2025 HeadsApp · All rights reserved
+        </p>
+      </div>
+
+      {/* Right – Form area */}
+      <div className="flex-1 flex items-center justify-center p-6 sm:p-10">
+        <div className="w-full max-w-[400px]">
           {/* Mobile logo */}
-          <div className="lg:hidden flex items-center gap-2.5 mb-8">
-            <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center">
-              <Shield className="w-[18px] h-[18px] text-primary-foreground" />
+          <div className="lg:hidden flex items-center gap-3 mb-10">
+            <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
+              <Shield className="w-5 h-5 text-primary-foreground" />
             </div>
             <span className="text-lg font-bold text-foreground">VerifLab</span>
           </div>
 
           <div className="mb-8">
-            <h1 className="text-2xl font-bold text-foreground">Sign in to your account</h1>
-            <p className="text-sm text-muted-foreground mt-1">Enter your credentials to continue</p>
+            <h1 className="text-[1.65rem] font-bold text-foreground tracking-tight">Welcome back</h1>
+            <p className="text-sm text-muted-foreground mt-1.5">Sign in to access your dashboard</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
-              <Alert variant="destructive">
+              <Alert variant="destructive" className="py-3">
                 <AlertCircle className="h-4 w-4" />
-                <AlertDescription>{error}</AlertDescription>
+                <AlertDescription className="text-sm">{error}</AlertDescription>
               </Alert>
             )}
 
             <div className="space-y-1.5">
-              <Label htmlFor="email" className="text-xs font-medium">Email</Label>
+              <Label htmlFor="email" className="text-xs font-medium text-muted-foreground">Email address</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-[15px] h-[15px] text-muted-foreground/60" />
                 <Input
                   id="email"
                   type="email"
-                  placeholder="you@company.com"
+                  placeholder="name@company.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   autoComplete="email"
-                  className="h-11 pl-9"
+                  className="h-11 pl-10 bg-background border-border"
                 />
               </div>
             </div>
 
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="text-xs font-medium">Password</Label>
-                <button type="button" className="text-xs text-primary hover:underline">
+                <Label htmlFor="password" className="text-xs font-medium text-muted-foreground">Password</Label>
+                <button type="button" className="text-xs text-primary hover:text-primary/80 transition-colors font-medium">
                   Forgot password?
                 </button>
               </div>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-[15px] h-[15px] text-muted-foreground/60" />
                 <Input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="••••••••"
+                  placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   autoComplete="current-password"
-                  className="h-11 pl-9 pr-10"
+                  className="h-11 pl-10 pr-11 bg-background border-border"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground/60 hover:text-foreground transition-colors"
                 >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showPassword ? <EyeOff className="w-[15px] h-[15px]" /> : <Eye className="w-[15px] h-[15px]" />}
                 </button>
               </div>
             </div>
 
-            <Button type="submit" className="w-full h-11" disabled={isLoading}>
+            <Button type="submit" className="w-full h-11 font-medium text-sm" disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -164,30 +186,25 @@ export default function Login() {
           </form>
 
           {/* Demo accounts */}
-          <div className="mt-8 space-y-3">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-border" />
-              </div>
-              <div className="relative flex justify-center text-xs">
-                <span className="bg-card px-3 text-muted-foreground">Demo accounts</span>
-              </div>
-            </div>
-            <div className="space-y-2">
-              {demoAccounts.map((demo) => (
-                <button
-                  key={demo.email}
-                  type="button"
-                  onClick={() => fillDemo(demo.email)}
-                  className="w-full flex items-center justify-between p-3 rounded-lg border border-border hover:bg-accent transition-colors text-left"
-                >
-                  <div>
-                    <p className="text-sm font-medium text-foreground">{demo.label}</p>
-                    <p className="text-xs text-muted-foreground">{demo.desc}</p>
-                  </div>
-                  <span className="text-xs text-muted-foreground font-mono">{demo.email}</span>
-                </button>
-              ))}
+          <div className="mt-10">
+            <p className="text-[11px] font-medium uppercase tracking-widest text-muted-foreground/70 mb-3">Quick access — Demo</p>
+            <div className="grid grid-cols-3 gap-2">
+              {demoAccounts.map((demo) => {
+                const Icon = demo.icon;
+                return (
+                  <button
+                    key={demo.email}
+                    type="button"
+                    onClick={() => fillDemo(demo.email)}
+                    className="flex flex-col items-center gap-2 p-3.5 rounded-xl border border-border bg-card hover:bg-accent hover:border-primary/20 transition-all text-center group"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+                      <Icon className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                    </div>
+                    <span className="text-xs font-medium text-foreground">{demo.label}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
