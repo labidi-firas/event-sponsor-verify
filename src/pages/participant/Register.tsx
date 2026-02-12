@@ -76,148 +76,115 @@ export default function ParticipantRegister() {
             You will receive a confirmation email once approved.
           </p>
           <div className="flex gap-3 justify-center">
-            <Button variant="outline" onClick={() => navigate('/participant/events')}>
-              Browse Events
-            </Button>
-            <Button onClick={() => navigate('/participant/registrations')}>
-              My Registrations
-            </Button>
+            <Button variant="outline" onClick={() => navigate('/participant/events')}>Browse Events</Button>
+            <Button onClick={() => navigate('/participant/registrations')}>My Registrations</Button>
           </div>
         </div>
       </AppLayout>
     );
   }
 
-  const fieldGroup = (
-    icon: React.ReactNode,
-    title: string,
-    children: React.ReactNode,
-  ) => (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2.5 pb-2 border-b border-border">
-        <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center">
-          {icon}
-        </div>
-        <h3 className="text-sm font-semibold text-foreground">{title}</h3>
-      </div>
-      {children}
-    </div>
-  );
-
   return (
-    <AppLayout
-      title="Event Registration"
-      subtitle="Complete the form below to submit your registration"
-    >
+    <AppLayout title="Event Registration" subtitle="Complete the form below to submit your registration">
       <div className="max-w-3xl mx-auto space-y-6">
-        {/* Event summary card */}
-        <div className="rounded-xl border border-border bg-card overflow-hidden">
-          <div className="bg-primary/5 border-b border-border px-6 py-4">
-            <h3 className="font-semibold text-foreground text-base">{event.name}</h3>
-          </div>
-          <div className="px-6 py-4 flex flex-wrap gap-6 text-sm text-muted-foreground">
-            <span className="flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-primary/70" />
-              {event.date}
-            </span>
-            <span className="flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-primary/70" />
-              {event.location}
-            </span>
-            <span className="flex items-center gap-2">
-              <Users className="w-4 h-4 text-primary/70" />
-              {event.participantCount} participants
-            </span>
+        {/* Event summary */}
+        <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
+          <div className="bg-primary/5 border-b border-border px-6 py-4 flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+              <Calendar className="w-4 h-4 text-primary" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-foreground text-sm">{event.name}</h3>
+              <div className="flex gap-4 mt-0.5 text-xs text-muted-foreground">
+                <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{event.date}</span>
+                <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{event.location}</span>
+                <span className="flex items-center gap-1"><Users className="w-3 h-3" />{event.participantCount} participants</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Registration form */}
-        <div className="rounded-xl border border-border bg-card">
+        {/* Form */}
+        <div className="rounded-2xl border border-border bg-card shadow-sm">
           <div className="px-6 sm:px-8 py-5 border-b border-border">
             <h2 className="text-base font-semibold text-foreground">Registration Details</h2>
             <p className="text-xs text-muted-foreground mt-0.5">Fields marked with * are required</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="px-6 sm:px-8 py-6 space-y-8">
-            {/* Personal Information */}
-            {fieldGroup(
-              <User className="w-3.5 h-3.5 text-primary" />,
-              'Personal Information',
+          <form onSubmit={handleSubmit} className="px-6 sm:px-8 py-6 space-y-6">
+            {/* Personal */}
+            <FieldSection icon={<User className="w-3.5 h-3.5 text-primary" />} title="Personal Information">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <Label htmlFor="lastName" className="text-xs font-medium text-muted-foreground">Last Name *</Label>
-                  <Input id="lastName" placeholder="Doe" value={formData.lastName} onChange={e => handleChange('lastName', e.target.value)} required className="h-10" />
-                </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="firstName" className="text-xs font-medium text-muted-foreground">First Name *</Label>
-                  <Input id="firstName" placeholder="John" value={formData.firstName} onChange={e => handleChange('firstName', e.target.value)} required className="h-10" />
-                </div>
+                <FormField label="Last Name *" id="lastName" placeholder="Doe" value={formData.lastName} onChange={v => handleChange('lastName', v)} />
+                <FormField label="First Name *" id="firstName" placeholder="John" value={formData.firstName} onChange={v => handleChange('firstName', v)} />
               </div>
-            )}
+            </FieldSection>
 
-            {/* Contact Details */}
-            {fieldGroup(
-              <Mail className="w-3.5 h-3.5 text-primary" />,
-              'Contact Details',
+            {/* Contact */}
+            <FieldSection icon={<Mail className="w-3.5 h-3.5 text-primary" />} title="Contact Details">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <Label htmlFor="email" className="text-xs font-medium text-muted-foreground">Email *</Label>
-                  <Input id="email" type="email" placeholder="john.doe@example.com" value={formData.email} onChange={e => handleChange('email', e.target.value)} required className="h-10" />
-                </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="phone" className="text-xs font-medium text-muted-foreground">Phone</Label>
-                  <Input id="phone" type="tel" placeholder="+1 (555) 000-0000" value={formData.phone} onChange={e => handleChange('phone', e.target.value)} className="h-10" />
-                </div>
+                <FormField label="Email *" id="email" type="email" placeholder="john.doe@example.com" value={formData.email} onChange={v => handleChange('email', v)} />
+                <FormField label="Phone" id="phone" type="tel" placeholder="+1 (555) 000-0000" value={formData.phone} onChange={v => handleChange('phone', v)} />
               </div>
-            )}
+            </FieldSection>
 
-            {/* Professional Background */}
-            {fieldGroup(
-              <Stethoscope className="w-3.5 h-3.5 text-primary" />,
-              'Professional Background',
+            {/* Professional */}
+            <FieldSection icon={<Stethoscope className="w-3.5 h-3.5 text-primary" />} title="Professional Background">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <Label htmlFor="specialty" className="text-xs font-medium text-muted-foreground">Specialty *</Label>
+                  <Label className="text-xs font-medium text-muted-foreground">Specialty *</Label>
                   <Select value={formData.specialty} onValueChange={v => handleChange('specialty', v)}>
-                    <SelectTrigger className="h-10"><SelectValue placeholder="Select specialty" /></SelectTrigger>
+                    <SelectTrigger className="h-10 bg-secondary/30"><SelectValue placeholder="Select specialty" /></SelectTrigger>
                     <SelectContent>
                       {specialties.map(s => (<SelectItem key={s} value={s}>{s}</SelectItem>))}
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="institution" className="text-xs font-medium text-muted-foreground">Institution</Label>
-                  <Input id="institution" placeholder="Hospital / Clinic" value={formData.institution} onChange={e => handleChange('institution', e.target.value)} className="h-10" />
-                </div>
+                <FormField label="Institution" id="institution" placeholder="Hospital / Clinic" value={formData.institution} onChange={v => handleChange('institution', v)} />
               </div>
-            )}
+            </FieldSection>
 
             {/* Motivation */}
             <div className="space-y-1.5">
               <Label htmlFor="motivation" className="text-xs font-medium text-muted-foreground">Motivation (optional)</Label>
-              <Textarea id="motivation" placeholder="Why would you like to attend this event?" value={formData.motivation} onChange={e => handleChange('motivation', e.target.value)} rows={3} className="resize-none" />
+              <Textarea id="motivation" placeholder="Why would you like to attend this event?" value={formData.motivation} onChange={e => handleChange('motivation', e.target.value)} rows={3} className="resize-none bg-secondary/30" />
             </div>
 
             {/* Actions */}
             <div className="flex gap-3 pt-4 border-t border-border">
               <Button type="button" variant="outline" onClick={() => navigate('/participant/events')} className="h-10">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back
+                <ArrowLeft className="w-4 h-4 mr-2" />Back
               </Button>
-              <Button type="submit" disabled={isSubmitting} className="flex-1 h-10">
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Submitting…
-                  </>
-                ) : (
-                  'Confirm Registration'
-                )}
+              <Button type="submit" disabled={isSubmitting} className="flex-1 h-10 rounded-xl">
+                {isSubmitting ? (<><Loader2 className="w-4 h-4 mr-2 animate-spin" />Submitting…</>) : 'Confirm Registration'}
               </Button>
             </div>
           </form>
         </div>
       </div>
     </AppLayout>
+  );
+}
+
+function FieldSection({ icon, title, children }: { icon: React.ReactNode; title: string; children: React.ReactNode }) {
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-2.5 pb-2 border-b border-border">
+        <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center">{icon}</div>
+        <h3 className="text-sm font-semibold text-foreground">{title}</h3>
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function FormField({ label, id, placeholder, value, onChange, type = 'text' }: {
+  label: string; id: string; placeholder: string; value: string; onChange: (v: string) => void; type?: string;
+}) {
+  return (
+    <div className="space-y-1.5">
+      <Label htmlFor={id} className="text-xs font-medium text-muted-foreground">{label}</Label>
+      <Input id={id} type={type} placeholder={placeholder} value={value} onChange={e => onChange(e.target.value)} className="h-10 bg-secondary/30" required={label.includes('*')} />
+    </div>
   );
 }
