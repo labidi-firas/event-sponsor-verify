@@ -16,6 +16,9 @@ import Sponsorships from "./pages/laboratory/Sponsorships";
 import Declare from "./pages/laboratory/Declare";
 import Import from "./pages/laboratory/Import";
 
+// Landing Page
+import LandingPage from "./pages/LandingPage";
+
 // Participant Pages
 import ParticipantEvents from "./pages/participant/Events";
 import ParticipantRegistrations from "./pages/participant/Registrations";
@@ -57,25 +60,13 @@ function AppRoutes() {
   return (
     <Routes>
       {/* Public routes */}
-      <Route 
-        path="/login" 
-        element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login />} 
-      />
+      <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login />} />
+      <Route path="/events" element={<LandingPage />} />
 
       {/* Root redirect */}
       <Route 
         path="/" 
-        element={
-          isAuthenticated 
-            ? <Navigate to={
-                user?.role === 'participant' 
-                  ? '/participant/events' 
-                  : user?.role === 'admin' 
-                    ? '/admin/dashboard' 
-                    : '/dashboard'
-              } replace />
-            : <Navigate to="/login" replace />
-        } 
+        element={<Navigate to="/events" replace />}
       />
 
       {/* Laboratory routes */}
