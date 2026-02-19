@@ -36,6 +36,7 @@ const navItems: NavItem[] = [
   // Participant items
   { icon: Calendar, label: 'Événements', path: '/participant/events', roles: ['participant'] },
   { icon: ListChecks, label: 'Mes inscriptions', path: '/participant/registrations', roles: ['participant'] },
+  { icon: UserCheck, label: 'Gérer profil', path: '/participant/profile', roles: ['participant'] },
   
   // Admin items
   { icon: LayoutDashboard, label: 'Tableau de bord', path: '/admin/dashboard', roles: ['admin'] },
@@ -80,7 +81,13 @@ export function AppSidebar() {
       {/* User info */}
       {user && (
         <div className="px-4 py-4">
-          <div className="flex items-center gap-3 px-2">
+          <button
+            onClick={() => user.role === 'participant' ? navigate('/participant/profile') : undefined}
+            className={cn(
+              "flex items-center gap-3 px-2 w-full text-left",
+              user.role === 'participant' && "cursor-pointer hover:opacity-80 transition-opacity"
+            )}
+          >
             <div className="w-9 h-9 rounded-full bg-sidebar-accent flex items-center justify-center">
               <span className="text-sm font-medium">
                 {user.name.split(' ').map(n => n[0]).join('')}
@@ -90,11 +97,11 @@ export function AppSidebar() {
               <p className="text-sm font-medium truncate">{user.name}</p>
               <p className="text-xs text-sidebar-foreground/70 truncate">
                 {user.role === 'laboratory' && user.laboratoryName}
-                {user.role === 'participant' && 'Participant'}
+                {user.role === 'participant' && 'Gérer profil →'}
                 {user.role === 'admin' && 'Administrateur'}
               </p>
             </div>
-          </div>
+          </button>
         </div>
       )}
 

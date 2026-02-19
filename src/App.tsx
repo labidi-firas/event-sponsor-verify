@@ -23,6 +23,7 @@ import LandingPage from "./pages/LandingPage";
 import ParticipantEvents from "./pages/participant/Events";
 import ParticipantRegistrations from "./pages/participant/Registrations";
 import ParticipantRegister from "./pages/participant/Register";
+import ParticipantProfile from "./pages/participant/Profile";
 
 // Admin Pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -110,6 +111,11 @@ function AppRoutes() {
       <Route path="/participant/register/:eventId" element={
         <ProtectedRoute allowedRoles={['participant']}>
           <ParticipantRegister />
+        </ProtectedRoute>
+      } />
+      <Route path="/participant/profile" element={
+        <ProtectedRoute allowedRoles={['participant']}>
+          <ParticipantProfile />
         </ProtectedRoute>
       } />
 
