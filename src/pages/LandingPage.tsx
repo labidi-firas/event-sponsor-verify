@@ -1,10 +1,11 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Separator } from '@/components/ui/separator';
 import { mockEvents } from '@/data/mockData';
 import {
   Calendar,
@@ -12,85 +13,279 @@ import {
   Users,
   Search,
   ArrowRight,
+  ArrowUpRight,
   Shield,
-  Activity,
   CheckCircle2,
   Globe,
   Clock,
   ChevronLeft,
   ChevronRight,
-  Stethoscope,
+  Zap,
+  Award,
+  TrendingUp,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 const ITEMS_PER_PAGE = 6;
 
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.08, duration: 0.5, ease: 'easeOut' as const },
+  }),
+};
+
+const staggerContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.06 } },
+};
+
+/* ──────────────────────────────────────────────
+   Trusted-by / social proof strip
+   ────────────────────────────────────────────── */
+function TrustStrip() {
+  const orgs = ['CHU Paris', 'Hôpital Lyon-Sud', 'Institut Pasteur', 'AP-HP', 'Gustave Roussy'];
+  return (
+    <div className="border-b border-border bg-card/30">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6">
+        <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-semibold shrink-0">
+          Trusted by
+        </span>
+        <div className="flex items-center gap-6 flex-wrap justify-center">
+          {orgs.map((org) => (
+            <span key={org} className="text-xs text-muted-foreground/60 font-medium whitespace-nowrap">
+              {org}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ──────────────────────────────────────────────
+   Hero
+   ────────────────────────────────────────────── */
 function HeroSection({ searchQuery, onSearchChange }: { searchQuery: string; onSearchChange: (v: string) => void }) {
   const stats = [
-    { icon: Globe, label: 'Events Hosted', value: '120+' },
-    { icon: Users, label: 'Participants', value: '15,000+' },
-    { icon: CheckCircle2, label: 'Validated', value: '98%' },
-    { icon: Clock, label: 'Avg. Processing', value: '<2min' },
+    { icon: Globe, label: 'Events Hosted', value: '120+', color: 'text-primary' },
+    { icon: Users, label: 'Participants', value: '15K+', color: 'text-primary' },
+    { icon: CheckCircle2, label: 'Validation Rate', value: '98%', color: 'text-emerald-600' },
+    { icon: Clock, label: 'Avg. Processing', value: '<2m', color: 'text-primary' },
   ];
 
   return (
-    <section className="relative overflow-hidden border-b border-border">
-      {/* Subtle grid pattern */}
-      <div
-        className="absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage: `linear-gradient(hsl(var(--foreground)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--foreground)) 1px, transparent 1px)`,
-          backgroundSize: '60px 60px',
-        }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.03] via-transparent to-background" />
-      
-      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 sm:pt-28 sm:pb-20">
-        <div className="text-center max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-2 bg-primary/[0.08] border border-primary/[0.12] rounded-md px-3 py-1.5 mb-8">
-            <Activity className="w-3.5 h-3.5 text-primary" />
-            <span className="text-[11px] font-semibold text-primary uppercase tracking-[0.15em]">Medical Events Platform</span>
-          </div>
+    <section className="relative overflow-hidden">
+      {/* Geometric accent */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] -translate-y-1/3 translate-x-1/4 rounded-full border border-primary/[0.06]" />
+      <div className="absolute top-20 right-20 w-[300px] h-[300px] -translate-y-1/4 translate-x-1/4 rounded-full border border-primary/[0.04]" />
+      <div className="absolute bottom-0 left-0 w-[200px] h-[200px] translate-y-1/2 -translate-x-1/3 rounded-full bg-primary/[0.02]" />
 
-          <h1 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-bold text-foreground leading-[1.15] tracking-tight mb-4">
-            Discover & Register for
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-14 sm:pt-24 sm:pb-20">
+        <motion.div
+          className="max-w-3xl"
+          initial="hidden"
+          animate="visible"
+          variants={staggerContainer}
+        >
+          {/* Tag */}
+          <motion.div variants={fadeUp} custom={0}>
+            <div className="inline-flex items-center gap-1.5 border border-primary/15 bg-primary/[0.06] rounded-full px-3 py-1 mb-6">
+              <Zap className="w-3 h-3 text-primary" />
+              <span className="text-[10px] font-bold text-primary uppercase tracking-[0.18em]">
+                Medical Events Platform
+              </span>
+            </div>
+          </motion.div>
+
+          {/* Heading */}
+          <motion.h1
+            variants={fadeUp}
+            custom={1}
+            className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground leading-[1.1] tracking-tight mb-5"
+          >
+            The smarter way to
             <br />
-            <span className="text-primary">Medical Events</span>
-          </h1>
+            discover & register for{' '}
+            <span className="relative inline-block text-primary">
+              medical events
+              <span className="absolute -bottom-1.5 left-0 right-0 h-[3px] bg-primary/20 rounded-full" />
+            </span>
+          </motion.h1>
 
-          <p className="text-[15px] text-muted-foreground max-w-lg mx-auto mb-10 leading-relaxed">
-            Browse upcoming medical congresses, symposiums, and forums. 
-            Register with one click and manage your participation seamlessly.
-          </p>
+          {/* Sub */}
+          <motion.p
+            variants={fadeUp}
+            custom={2}
+            className="text-muted-foreground text-base sm:text-lg max-w-xl mb-8 leading-relaxed"
+          >
+            Browse upcoming congresses, symposiums, and forums.
+            Register in one click and manage your participation — all in one place.
+          </motion.p>
 
           {/* Search */}
-          <div className="relative max-w-lg mx-auto mb-14">
-            <div className="relative flex items-center bg-card border border-border rounded-lg shadow-sm">
-              <Search className="absolute left-3.5 text-muted-foreground w-4 h-4" />
-              <Input
-                placeholder="Search events by name or location..."
-                value={searchQuery}
-                onChange={(e) => onSearchChange(e.target.value)}
-                className="border-0 h-12 text-sm pl-10 pr-24 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"
-              />
-              <Button size="sm" className="absolute right-1.5 h-9 px-4 rounded-md text-xs font-semibold">
-                Search
-              </Button>
+          <motion.div variants={fadeUp} custom={3} className="max-w-xl mb-12">
+            <div className="relative group">
+              <div className="absolute -inset-px rounded-xl bg-gradient-to-r from-primary/20 via-primary/5 to-primary/20 opacity-0 group-focus-within:opacity-100 transition-opacity duration-300" />
+              <div className="relative flex items-center bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+                <Search className="ml-4 text-muted-foreground w-4 h-4 shrink-0" />
+                <Input
+                  placeholder="Search by event name or location..."
+                  value={searchQuery}
+                  onChange={(e) => onSearchChange(e.target.value)}
+                  className="border-0 h-12 text-sm pl-3 pr-28 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent placeholder:text-muted-foreground/50"
+                />
+                <Button size="sm" className="absolute right-1.5 h-9 px-5 rounded-lg text-xs font-semibold shadow-sm">
+                  Search
+                </Button>
+              </div>
             </div>
-          </div>
-        </div>
+          </motion.div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl mx-auto">
-          {stats.map((stat) => (
-            <div
-              key={stat.label}
-              className="flex flex-col items-center gap-1.5 p-4 rounded-lg border border-border/60 bg-card/50"
+          {/* Stats */}
+          <motion.div
+            variants={fadeUp}
+            custom={4}
+            className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-border rounded-xl overflow-hidden border border-border"
+          >
+            {stats.map((stat) => (
+              <div
+                key={stat.label}
+                className="bg-card flex flex-col items-center justify-center py-5 px-3"
+              >
+                <stat.icon className={`w-4 h-4 ${stat.color} mb-2`} />
+                <span className="text-2xl font-bold text-foreground leading-none tracking-tight">{stat.value}</span>
+                <span className="text-[10px] text-muted-foreground font-medium mt-1.5 uppercase tracking-wider">{stat.label}</span>
+              </div>
+            ))}
+          </motion.div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+/* ──────────────────────────────────────────────
+   Status Badge
+   ────────────────────────────────────────────── */
+function StatusBadge({ status }: { status: string }) {
+  const config: Record<string, { label: string; dot: string; className: string }> = {
+    active: { label: 'Active', dot: 'bg-emerald-500', className: 'bg-emerald-500/8 text-emerald-700 border-emerald-500/15' },
+    upcoming: { label: 'Upcoming', dot: 'bg-primary', className: 'bg-primary/8 text-primary border-primary/15' },
+    completed: { label: 'Ended', dot: 'bg-muted-foreground/40', className: 'bg-muted text-muted-foreground border-border' },
+  };
+  const c = config[status];
+  if (!c) return null;
+  return (
+    <Badge variant="outline" className={`text-[10px] font-semibold px-2 py-0.5 gap-1.5 ${c.className}`}>
+      <span className={`w-1.5 h-1.5 rounded-full ${c.dot}`} />
+      {c.label}
+    </Badge>
+  );
+}
+
+/* ──────────────────────────────────────────────
+   Event Card
+   ────────────────────────────────────────────── */
+function EventCard({ event, onRegister, index }: { event: typeof mockEvents[0]; onRegister: (id: string) => void; index: number }) {
+  return (
+    <motion.div
+      variants={fadeUp}
+      custom={index}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: '-40px' }}
+    >
+      <Card className="group relative overflow-hidden border-border bg-card hover:border-primary/20 transition-all duration-300 hover:shadow-lg hover:shadow-primary/[0.04]">
+        {/* Hover accent line */}
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+        <CardContent className="p-6">
+          {/* Status + type label */}
+          <div className="flex items-center justify-between mb-4">
+            <StatusBadge status={event.status} />
+            <span className="text-[10px] text-muted-foreground/50 font-mono uppercase">
+              EVT-{event.id.padStart(3, '0')}
+            </span>
+          </div>
+
+          {/* Title */}
+          <h3 className="font-semibold text-foreground text-[15px] leading-snug mb-4 group-hover:text-primary transition-colors line-clamp-2 min-h-[2.5rem]">
+            {event.name}
+          </h3>
+
+          {/* Meta rows */}
+          <div className="space-y-2.5 mb-6">
+            {[
+              { icon: Calendar, text: event.date },
+              { icon: MapPin, text: event.location },
+              { icon: Users, text: `${event.participantCount.toLocaleString()} participants` },
+            ].map(({ icon: Icon, text }) => (
+              <div key={text} className="flex items-center gap-3 text-[13px] text-muted-foreground">
+                <div className="w-8 h-8 rounded-lg bg-secondary/80 flex items-center justify-center shrink-0">
+                  <Icon className="w-3.5 h-3.5 text-foreground/50" />
+                </div>
+                <span className="truncate">{text}</span>
+              </div>
+            ))}
+          </div>
+
+          <Separator className="mb-5" />
+
+          {/* CTA */}
+          {event.status !== 'completed' ? (
+            <Button
+              className="w-full h-10 text-xs font-semibold rounded-lg group/btn"
+              onClick={() => onRegister(event.id)}
             >
-              <stat.icon className="w-4 h-4 text-primary" />
-              <span className="text-xl font-bold text-foreground leading-none">{stat.value}</span>
-              <span className="text-[11px] text-muted-foreground font-medium">{stat.label}</span>
-            </div>
+              Register Now
+              <ArrowRight className="w-3.5 h-3.5 ml-1.5 group-hover/btn:translate-x-0.5 transition-transform" />
+            </Button>
+          ) : (
+            <Button variant="outline" className="w-full h-10 text-xs font-medium rounded-lg" disabled>
+              Event Completed
+            </Button>
+          )}
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
+}
+
+/* ──────────────────────────────────────────────
+   Features row (value props)
+   ────────────────────────────────────────────── */
+function FeaturesRow() {
+  const features = [
+    { icon: Zap, title: 'Instant Registration', desc: 'Sign up for events in seconds with one-click enrollment' },
+    { icon: Award, title: 'Verified Events', desc: 'All events are validated by official medical boards' },
+    { icon: TrendingUp, title: 'Track Everything', desc: 'Monitor your registrations, certificates, and history' },
+  ];
+
+  return (
+    <section className="border-y border-border bg-card/40">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+          {features.map((f, i) => (
+            <motion.div
+              key={f.title}
+              variants={fadeUp}
+              custom={i}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="flex gap-4"
+            >
+              <div className="w-10 h-10 rounded-xl bg-primary/[0.08] border border-primary/[0.1] flex items-center justify-center shrink-0">
+                <f.icon className="w-4.5 h-4.5 text-primary" />
+              </div>
+              <div>
+                <h4 className="text-sm font-semibold text-foreground mb-1">{f.title}</h4>
+                <p className="text-xs text-muted-foreground leading-relaxed">{f.desc}</p>
+              </div>
+            </motion.div>
           ))}
         </div>
       </div>
@@ -98,71 +293,9 @@ function HeroSection({ searchQuery, onSearchChange }: { searchQuery: string; onS
   );
 }
 
-function StatusBadge({ status }: { status: string }) {
-  const config: Record<string, { label: string; className: string }> = {
-    active: { label: 'Active', className: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' },
-    upcoming: { label: 'Upcoming', className: 'bg-primary/10 text-primary border-primary/20' },
-    completed: { label: 'Completed', className: 'bg-muted text-muted-foreground border-border' },
-  };
-  const c = config[status];
-  if (!c) return null;
-  return (
-    <Badge variant="outline" className={`text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 ${c.className}`}>
-      {c.label}
-    </Badge>
-  );
-}
-
-function EventCard({ event, onRegister }: { event: typeof mockEvents[0]; onRegister: (id: string) => void }) {
-  const accentColor = event.status === 'active' ? 'bg-emerald-500' : event.status === 'upcoming' ? 'bg-primary' : 'bg-muted-foreground/30';
-
-  return (
-    <Card className="group relative overflow-hidden border-border hover:border-primary/25 transition-all duration-200 hover:shadow-md">
-      <div className={`h-0.5 w-full ${accentColor}`} />
-      <CardContent className="p-5">
-        {/* Header */}
-        <div className="flex items-start justify-between gap-3 mb-4">
-          <h3 className="font-semibold text-foreground text-sm leading-snug line-clamp-2 group-hover:text-primary transition-colors">
-            {event.name}
-          </h3>
-          <StatusBadge status={event.status} />
-        </div>
-
-        {/* Meta */}
-        <div className="space-y-2 mb-5">
-          {[
-            { icon: Calendar, text: event.date },
-            { icon: MapPin, text: event.location },
-            { icon: Users, text: `${event.participantCount.toLocaleString()} participants` },
-          ].map(({ icon: Icon, text }) => (
-            <div key={text} className="flex items-center gap-2.5 text-[13px] text-muted-foreground">
-              <div className="w-7 h-7 rounded-md bg-secondary flex items-center justify-center shrink-0">
-                <Icon className="w-3.5 h-3.5 text-primary" />
-              </div>
-              <span>{text}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Action */}
-        {event.status !== 'completed' ? (
-          <Button
-            className="w-full h-10 text-xs font-semibold rounded-md"
-            onClick={() => onRegister(event.id)}
-          >
-            Register Now
-            <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
-          </Button>
-        ) : (
-          <Button variant="outline" className="w-full h-10 text-xs font-semibold rounded-md" disabled>
-            Event Completed
-          </Button>
-        )}
-      </CardContent>
-    </Card>
-  );
-}
-
+/* ──────────────────────────────────────────────
+   Pagination
+   ────────────────────────────────────────────── */
 function PaginationControls({
   currentPage,
   totalPages,
@@ -182,14 +315,14 @@ function PaginationControls({
 
   return (
     <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-10 pt-6 border-t border-border">
-      <p className="text-xs text-muted-foreground order-2 sm:order-1">
-        Page {currentPage} of {totalPages} · {totalItems} events
+      <p className="text-[11px] text-muted-foreground font-mono order-2 sm:order-1">
+        Page {currentPage}/{totalPages} — {totalItems} results
       </p>
       <div className="flex items-center gap-1 order-1 sm:order-2">
         <Button
           variant="outline"
           size="sm"
-          className="h-8 w-8 p-0 rounded-md"
+          className="h-8 w-8 p-0 rounded-lg"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
         >
@@ -201,11 +334,11 @@ function PaginationControls({
           const showEllipsis = prev && page - prev > 1;
           return (
             <span key={page} className="flex items-center">
-              {showEllipsis && <span className="w-8 text-center text-xs text-muted-foreground">…</span>}
+              {showEllipsis && <span className="w-8 text-center text-[10px] text-muted-foreground">…</span>}
               <Button
                 variant={page === currentPage ? 'default' : 'ghost'}
                 size="sm"
-                className="h-8 w-8 p-0 rounded-md text-xs font-medium"
+                className="h-8 w-8 p-0 rounded-lg text-xs font-medium"
                 onClick={() => onPageChange(page)}
               >
                 {page}
@@ -217,7 +350,7 @@ function PaginationControls({
         <Button
           variant="outline"
           size="sm"
-          className="h-8 w-8 p-0 rounded-md"
+          className="h-8 w-8 p-0 rounded-lg"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
         >
@@ -228,6 +361,9 @@ function PaginationControls({
   );
 }
 
+/* ──────────────────────────────────────────────
+   Main Export
+   ────────────────────────────────────────────── */
 export default function LandingPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -263,31 +399,37 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* ─── Header ─── */}
-      <header className="sticky top-0 z-50 border-b border-border bg-card/90 backdrop-blur-lg">
+      <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center shadow-sm shadow-primary/20">
               <Shield className="w-4 h-4 text-primary-foreground" />
             </div>
             <div className="flex flex-col leading-none">
-              <span className="text-sm font-bold text-foreground">VerifLab</span>
-              <span className="text-[9px] text-muted-foreground font-medium tracking-wide">by HeadsApp</span>
+              <span className="text-sm font-bold text-foreground tracking-tight">VerifLab</span>
+              <span className="text-[9px] text-muted-foreground font-medium tracking-wider uppercase">by HeadsApp</span>
             </div>
           </div>
 
+          <nav className="hidden sm:flex items-center gap-6 mr-auto ml-12">
+            <a href="#events" className="text-xs text-muted-foreground hover:text-foreground transition-colors font-medium">Events</a>
+            <a href="#features" className="text-xs text-muted-foreground hover:text-foreground transition-colors font-medium">Features</a>
+          </nav>
+
           <div className="flex items-center gap-2">
             {isAuthenticated ? (
-              <Button size="sm" variant="outline" className="h-8 text-xs rounded-md" onClick={() => navigate('/dashboard')}>
+              <Button size="sm" variant="outline" className="h-8 text-xs rounded-lg font-medium" onClick={() => navigate('/dashboard')}>
                 Dashboard
-                <ArrowRight className="w-3 h-3 ml-1" />
+                <ArrowUpRight className="w-3 h-3 ml-1" />
               </Button>
             ) : (
               <>
-                <Button variant="ghost" size="sm" className="h-8 text-xs rounded-md" onClick={() => navigate('/login')}>
+                <Button variant="ghost" size="sm" className="h-8 text-xs rounded-lg font-medium" onClick={() => navigate('/login')}>
                   Sign In
                 </Button>
-                <Button size="sm" className="h-8 text-xs rounded-md" onClick={() => navigate('/login')}>
+                <Button size="sm" className="h-8 text-xs rounded-lg font-semibold shadow-sm shadow-primary/20" onClick={() => navigate('/login')}>
                   Get Started
+                  <ArrowRight className="w-3 h-3 ml-1" />
                 </Button>
               </>
             )}
@@ -295,35 +437,47 @@ export default function LandingPage() {
         </div>
       </header>
 
+      {/* ─── Trust strip ─── */}
+      <TrustStrip />
+
       {/* ─── Hero ─── */}
       <HeroSection searchQuery={searchQuery} onSearchChange={setSearchQuery} />
 
+      {/* ─── Features ─── */}
+      <div id="features">
+        <FeaturesRow />
+      </div>
+
       {/* ─── Events ─── */}
-      <main className="flex-1">
-        <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="flex-1" id="events">
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
           <div className="flex items-end justify-between mb-8">
             <div>
-              <h2 className="text-xl font-bold text-foreground">Available Events</h2>
-              <p className="text-xs text-muted-foreground mt-1">{filteredEvents.length} events found</p>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+                <span className="text-[10px] font-bold text-primary uppercase tracking-[0.18em]">Browse Events</span>
+              </div>
+              <h2 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">Available Events</h2>
+              <p className="text-xs text-muted-foreground mt-1 font-mono">{filteredEvents.length} results</p>
             </div>
-            <div className="hidden sm:flex items-center gap-1">
-              <Button variant="outline" size="sm" className="h-7 text-[11px] rounded-md">All</Button>
-              <Button variant="ghost" size="sm" className="h-7 text-[11px] rounded-md text-muted-foreground">Active</Button>
-              <Button variant="ghost" size="sm" className="h-7 text-[11px] rounded-md text-muted-foreground">Upcoming</Button>
+            <div className="hidden sm:flex items-center gap-1 border border-border rounded-lg p-0.5">
+              <Button variant="secondary" size="sm" className="h-7 text-[11px] rounded-md font-semibold px-3">All</Button>
+              <Button variant="ghost" size="sm" className="h-7 text-[11px] rounded-md text-muted-foreground px-3">Active</Button>
+              <Button variant="ghost" size="sm" className="h-7 text-[11px] rounded-md text-muted-foreground px-3">Upcoming</Button>
             </div>
           </div>
 
           {currentEvents.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {currentEvents.map((event) => (
-                <EventCard key={event.id} event={event} onRegister={handleRegister} />
+              {currentEvents.map((event, i) => (
+                <EventCard key={event.id} event={event} onRegister={handleRegister} index={i} />
               ))}
             </div>
           ) : (
-            <div className="text-center py-20 border border-dashed border-border rounded-lg">
-              <Search className="w-6 h-6 text-muted-foreground/40 mx-auto mb-3" />
+            <div className="text-center py-20 border border-dashed border-border rounded-xl bg-card/30">
+              <Search className="w-6 h-6 text-muted-foreground/30 mx-auto mb-3" />
               <p className="text-sm font-semibold text-foreground">No events found</p>
-              <p className="text-xs text-muted-foreground mt-1">Try adjusting your search query</p>
+              <p className="text-[11px] text-muted-foreground mt-1">Try adjusting your search query</p>
             </div>
           )}
 
@@ -337,46 +491,63 @@ export default function LandingPage() {
       </main>
 
       {/* ─── CTA ─── */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-        <div className="relative overflow-hidden rounded-xl gradient-primary p-10 sm:p-12 text-center">
-          <div className="absolute inset-0 opacity-[0.04]" style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`,
-            backgroundSize: '24px 24px',
-          }} />
-          <div className="relative">
-            <Stethoscope className="w-8 h-8 text-primary-foreground/60 mx-auto mb-4" />
-            <h2 className="text-xl sm:text-2xl font-bold text-primary-foreground mb-2">
-              Ready to Join the Next Congress?
-            </h2>
-            <p className="text-primary-foreground/70 text-sm max-w-md mx-auto mb-6">
-              Create your account and start registering for medical events in minutes.
-            </p>
-            <Button
-              size="sm"
-              variant="secondary"
-              className="rounded-md font-semibold text-xs h-9 px-5"
-              onClick={() => navigate('/login')}
-            >
-              Create Account
-              <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
-            </Button>
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-14">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="relative overflow-hidden rounded-2xl gradient-primary p-10 sm:p-14"
+        >
+          {/* Geometric accents */}
+          <div className="absolute top-0 right-0 w-64 h-64 border border-white/[0.06] rounded-full -translate-y-1/2 translate-x-1/3" />
+          <div className="absolute bottom-0 left-0 w-40 h-40 border border-white/[0.04] rounded-full translate-y-1/2 -translate-x-1/3" />
+
+          <div className="relative flex flex-col sm:flex-row items-center justify-between gap-8">
+            <div className="text-center sm:text-left">
+              <h2 className="text-xl sm:text-2xl font-bold text-primary-foreground mb-2 tracking-tight">
+                Ready to Join the Next Congress?
+              </h2>
+              <p className="text-primary-foreground/60 text-sm max-w-md leading-relaxed">
+                Create your account and start registering for medical events in minutes. No setup required.
+              </p>
+            </div>
+            <div className="flex items-center gap-3 shrink-0">
+              <Button
+                variant="secondary"
+                className="rounded-lg font-semibold text-xs h-10 px-6 shadow-md"
+                onClick={() => navigate('/login')}
+              >
+                Create Account
+                <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+              </Button>
+            </div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* ─── Footer ─── */}
-      <footer className="border-t border-border bg-card/40 py-6">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-primary flex items-center justify-center">
-              <Shield className="w-3 h-3 text-primary-foreground" />
+      <footer className="border-t border-border bg-card/30">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-lg gradient-primary flex items-center justify-center">
+                <Shield className="w-3.5 h-3.5 text-primary-foreground" />
+              </div>
+              <div className="flex flex-col leading-none">
+                <span className="text-xs font-bold text-foreground">VerifLab</span>
+                <span className="text-[9px] text-muted-foreground">by HeadsApp</span>
+              </div>
             </div>
-            <span className="text-xs font-semibold text-foreground">VerifLab</span>
-            <span className="text-[10px] text-muted-foreground">by HeadsApp</span>
+            <div className="flex items-center gap-6">
+              <a href="#" className="text-[11px] text-muted-foreground hover:text-foreground transition-colors">Privacy</a>
+              <a href="#" className="text-[11px] text-muted-foreground hover:text-foreground transition-colors">Terms</a>
+              <a href="#" className="text-[11px] text-muted-foreground hover:text-foreground transition-colors">Contact</a>
+            </div>
+            <p className="text-[10px] text-muted-foreground font-mono">
+              © 2025 HeadsApp. All rights reserved.
+            </p>
           </div>
-          <p className="text-[10px] text-muted-foreground">
-            © 2025 HeadsApp — VerifLab. All rights reserved.
-          </p>
         </div>
       </footer>
     </div>
